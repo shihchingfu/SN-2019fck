@@ -1,0 +1,40 @@
+---
+title: "eda"
+format: html
+---
+
+```{r}
+library(conflicted)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(here)
+```
+
+```{r}
+SN2019fck_df <- read_csv(here("data_raw", "ZTF18aaqkcso_difference_photometry.csv"),
+                         col_types = "dfddf")
+
+glimpse(SN2019fck_df)
+summary(SN2019fck_df)
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4.5
+#| message: false
+SN2019fck_df |> 
+  dplyr::filter(filter == "g", flux_status == "positive") |> 
+  ggplot() +
+  aes(x = MJD, y = magpsf)  +
+  geom_linerange(aes(ymin = magpsf - 2*magpsf_error, ymax = magpsf + 2*magpsf_error),
+                 colour = "gray") +
+  geom_point(colour = "blue", alpha = 0.7) +
+  geom_rug(sides = "b", colour = "blue") +
+  scale_y_reverse() +
+  labs(x = "Time (MJD)", y = "Magnitude") +
+  theme_classic()
+
+ggsave(here("figures", "SN2019fck_magn.jpg"))
+```
+
