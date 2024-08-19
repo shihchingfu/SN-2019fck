@@ -38,3 +38,29 @@ SN2019fck_df |>
 ggsave(here("figures", "SN2019fck_magn.jpg"))
 ```
 
+
+```{r}
+#| fig-width: 8
+#| fig-height: 4
+
+SN2019fck_df |> 
+  dplyr::filter(filter == "g", flux_status == "positive") |> 
+  ggplot() +
+  aes(x = MJD, y = magpsf)  +
+  geom_smooth(colour = "yellow", method = lm, formula = y ~ splines::bs(x, 6), se = FALSE, linewidth = 2) +
+  geom_point(fill = "cyan", colour = "magenta", size = 4, shape = 21, stroke = 1) +
+  scale_y_reverse() +
+  labs(x = "Time", y = "Brightness") +
+  theme_classic() +
+  theme(
+  plot.background = element_rect(fill = "black", colour = "black"),
+  panel.background = element_rect(fill = "black", colour = "black"),
+  panel.border = element_blank(),
+  axis.line = element_line(color = "white", linewidth = 4),
+  axis.text = element_blank(),
+  axis.ticks = element_blank(),
+  axis.title = element_text(colour = "white", size = 18)
+  )
+
+ggsave(here("figures", "3mt-supernova.png"))
+```
